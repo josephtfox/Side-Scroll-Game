@@ -1,7 +1,7 @@
 import pygame
 from Environment import Environment
 from Player import Player
-from SpriteSheet import Spritesheet
+# from SpriteSheet import Spritesheet
 
 # Initializes the game window and the name of the window 
 pygame.init()
@@ -17,7 +17,7 @@ player = Player(window, DISPLAY_WIDTH, DISPLAY_HEIGHT, environment)
 # all_sprites = pygame.sprite.Group()
 # all_sprites.add(player)
 # Fill in with the sprite sheet image
-my_spritesheet = Spritesheet('main_character_sprite_sheet.png')
+# my_spritesheet = Spritesheet('main_character_sprite_sheet.png')
 # Enter the coords of where the sprite is on the sheet
 main_character1 = my_spritesheet.get_sprite(0,0,128,128)
 
