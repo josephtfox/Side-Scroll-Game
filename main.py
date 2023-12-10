@@ -1,66 +1,55 @@
 import pygame
-import sys
+from Environment import Environment
+from Player import Player
+from SpriteSheet import Spritesheet
 
-# 
-def draw_floor():
-    screen.blit(floor_surface, (floor_x_pos, 725))
-    screen.blit(floor_surface, (floor_x_pos + 1400, 725))
-
-# Initializes the game window and the name of the window just being "Side-Scoller"
+# Initializes the game window and the name of the window 
 pygame.init()
 pygame.display.set_caption('Side-Scroller')
-screen = pygame.display.set_mode((1400, 800))
-clock = pygame.time.Clock()
+DISPLAY_WIDTH, DISPLAY_HEIGHT = 1400, 800
+canvas = pygame.Surface((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+window = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+running = True
 
-# Creates the background image of the game 
-bg_surface = pygame.image.load('Background.png').convert()
-bg_surface = pygame.transform.scale(bg_surface, (1400, 1000))
+environment = Environment(window, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+player = Player(window, DISPLAY_WIDTH, DISPLAY_HEIGHT, environment)
 
-# Creates the flooring of the game
-floor_surface = pygame.image.load('flooring.png').convert()
-floor_surface = pygame.transform.scale(floor_surface, (1400, 75)) 
-floor_x_pos = 0
+# all_sprites = pygame.sprite.Group()
+# all_sprites.add(player)
+# Fill in with the sprite sheet image
+my_spritesheet = Spritesheet('main_character_sprite_sheet.png')
+# Enter the coords of where the sprite is on the sheet
+main_character1 = my_spritesheet.get_sprite(0,0,128,128)
 
-# Creating the class for the player object
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load("Character_Sprite.jpeg")
-        self.rect = self.image.get_rect()
- 
-# definition of the function for moving the character
-def move(self):
-      pass
- 
-# Definition of the function to update where the character is
-def update(self):
-      pass
- 
-# Definition of the function for the attack command
-def attack(self):
-      pass
-
-# Definition of the function for the jump commmand
-def jump(self):
-      pass
-
-
-player = Player();
-# 
-while True:
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+            running = False
 
+    window.screen.blit(environment.bg_surface, (0, 0))
+    environment.floor_x_pos -= 1
 
-    screen.blit(bg_surface, (0, 0))
-    floor_x_pos -= 1
-    
-    draw_floor()
+    environment.draw_floor()
 
-    if floor_x_pos <= -1400:
-        floor_x_pos = 0
+    if environment.floor_x_pos <= -1400:
+        environment.floor_x_pos = 0
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_a]:
+        player.player_pos.x -= 300 * environment.dt
+    if keys[pygame.K_d]:
+        player.player_pos.x += 300 * environment.dt
+
+    # if player.player_pos.y < environment.platform_height - player.player_height:
+    #     player.player_pos.y += 2  # Simulated gravity
+
+    # all_sprites.draw(window.screen)
+
+    # flip() the display to put your work on screen
+    pygame.display.flip()
+    canvas.blit(main_character1, (0, 0))
+
+    environment.dt = environment.clock.tick(60) / 1000
 
     pygame.display.update()
-    clock.tick(120)
+    environment.clock.tick(120)
